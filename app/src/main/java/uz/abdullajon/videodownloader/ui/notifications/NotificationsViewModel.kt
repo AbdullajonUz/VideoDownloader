@@ -1,13 +1,12 @@
 package uz.abdullajon.videodownloader.ui.notifications
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import uz.abdullajon.videodownloader.repository.videoRepository.VideoRepository
+import javax.inject.Inject
 
-class NotificationsViewModel : ViewModel() {
+@HiltViewModel
+class NotificationsViewModel @Inject constructor(videoRepository: VideoRepository) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
-    }
-    val text: LiveData<String> = _text
+
 }
