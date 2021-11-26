@@ -20,6 +20,8 @@ class VideoDownloaderAdapter : ListAdapter<DownloadVideo, VideoDownloaderAdapter
         val data = currentList[position]
 
         holder.itemVideosItemBinding.tvItemName.text = data.url
+
+
     }
 }
 

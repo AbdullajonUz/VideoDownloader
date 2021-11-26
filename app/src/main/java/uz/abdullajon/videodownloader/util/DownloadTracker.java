@@ -358,9 +358,10 @@ public class DownloadTracker {
     }
 
     private DownloadRequest buildDownloadRequest() {
+      //todo mediaItem.mediaMetadata.title.toString()
       return downloadHelper
           .getDownloadRequest(
-              Util.getUtf8Bytes(checkNotNull(mediaItem.mediaMetadata.title.toString())))
+              Util.getUtf8Bytes(checkNotNull("a")))
           .copyWithKeySetId(keySetId);
     }
   }

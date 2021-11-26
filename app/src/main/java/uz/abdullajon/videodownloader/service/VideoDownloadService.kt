@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.android.exoplayer2.offline.Download
 import com.google.android.exoplayer2.offline.DownloadManager
 import com.google.android.exoplayer2.offline.DownloadService
+import com.google.android.exoplayer2.scheduler.PlatformScheduler
 import com.google.android.exoplayer2.scheduler.Scheduler
 import com.google.android.exoplayer2.ui.DownloadNotificationHelper
 import com.google.android.exoplayer2.util.NotificationUtil
@@ -13,6 +14,7 @@ import uz.abdullajon.videodownloader.R
 import uz.abdullajon.videodownloader.util.DOWNLOAD_NOTIFICATION_CHANNEL_ID
 import uz.abdullajon.videodownloader.util.DemoUtil
 import uz.abdullajon.videodownloader.util.FOREGROUND_NOTIFICATION_ID
+import uz.abdullajon.videodownloader.util.JOB_ID
 
 class VideoDownloadService : DownloadService(
     FOREGROUND_NOTIFICATION_ID,
@@ -37,14 +39,22 @@ class VideoDownloadService : DownloadService(
     }
 
     override fun getScheduler(): Scheduler? {
-        TODO("Not yet implemented")
+        return PlatformScheduler(this, JOB_ID)
     }
 
     override fun getForegroundNotification(
         downloads: MutableList<Download>,
         notMetRequirements: Int
     ): Notification {
-        TODO("Not yet implemented")
+        return DemoUtil.getDownloadNotificationHelper( /* context= */this)!!
+            .buildProgressNotification( /* context= */
+                this,
+                R.drawable.ic_download,  /* contentIntent= */
+                null,  /* message= */
+                null,
+                downloads,
+                notMetRequirements
+            )
     }
 
     private class TerminalStateNotificationHelper(

@@ -1,9 +1,12 @@
 package uz.abdullajon.videodownloader.data.models
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "video")
 data class VideoModel(
-    private val url:String
+    val url: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0
 )

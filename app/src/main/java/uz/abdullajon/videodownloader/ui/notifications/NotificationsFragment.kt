@@ -7,20 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import com.google.android.exoplayer2.offline.DownloadService
-import com.google.android.exoplayer2.offline.DownloaderFactory
+import com.google.android.exoplayer2.MediaItem
 import dagger.hilt.android.AndroidEntryPoint
 import uz.abdullajon.videodownloader.databinding.FragmentNotificationsBinding
+import uz.abdullajon.videodownloader.util.DemoUtil
+import uz.abdullajon.videodownloader.util.DownloadTracker
 
 @AndroidEntryPoint
-class NotificationsFragment : Fragment() {
+class NotificationsFragment : Fragment(), DownloadTracker.Listener {
 
     private val notificationsViewModel: NotificationsViewModel by viewModels()
     private var _binding: FragmentNotificationsBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private var downloadTracker: DownloadTracker? = null
+
     private val binding get() = _binding!!
 
 
@@ -36,10 +36,27 @@ class NotificationsFragment : Fragment() {
 
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        binding.etUrl.setText(VIDEO_URL)
-        loadAction()
         return root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.etUrl.setText(VIDEO_URL)
+        downloadTracker = DemoUtil.getDownloadTracker(requireContext())
+        loadAction()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        downloadTracker!!.addListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        downloadTracker!!.removeListener(this)
+    }
+
 
     private fun loadAction() {
         binding.btnDownload.setOnClickListener {
@@ -49,12 +66,27 @@ class NotificationsFragment : Fragment() {
     }
 
     private fun downloadItem(videoUrl: String) {
+        onSampleDownloadButtonClicked(videoUrl)
 
+    }
+
+    private fun onSampleDownloadButtonClicked(videoUrl: String) {
+        val renderersFactory = DemoUtil.buildRenderersFactory( /* context= */
+            requireContext(),
+            true
+        )
+        downloadTracker!!.toggleDownload(
+            childFragmentManager, MediaItem.fromUri(videoUrl), renderersFactory
+        )
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDownloadsChanged() {
+
     }
 }
